@@ -1,6 +1,4 @@
-
-answer = "tater"
-alphabet = 'abcdefghijklmnopqrstuvwxyz'
+answer = "huzzy"
 
 
 def score_letters(words):
@@ -31,6 +29,20 @@ def find_best_guess(words, letter_scores):
 
     return best_guess
 
+def find_worst_guess(words, letter_scores):
+    # Finds the word with the lowest score
+    worst_guess = words[0]
+    worst_score = 9999999999
+
+    for word in words:
+        score = 0
+        for char in set(word):
+            score += letter_scores[char]
+        if score < worst_score:
+            worst_guess = word
+            worst_score = score
+
+    return worst_guess
 
 if __name__ == "__main__":
 
@@ -50,15 +62,33 @@ if __name__ == "__main__":
     #   5) Remove all words that do not have yellow letters
     #   6) Remove all words with yellow letters in guessed slot
     #   Repeat
-    
-    #   1) Make a dictonary of letters and the number of times they appear in the word list
-    #       (do not count double letters within words when scoring letters)
-    letter_scores = score_letters
-    print(f"Letter Scores: {letter_scores}")
 
-    #   2) Score each word by summing each letter's score in dictionary
-    #       (also do not count double letters within words towards a words score)
-    best_guess = find_best_guess(words, letter_scores)
+    for _ in range(10):
+        #   1) Make a dictonary of letters and the number of times they appear in the word list
+        #       (do not count double letters within words when scoring letters)
+        letter_scores = score_letters(words)
 
-    #   3) Evaluate the word with the highest score
-    
+        #   2) Score each word by summing each letter's score in dictionary
+        #       (also do not count double letters within words towards a words score)
+        best_guess = find_best_guess(words, letter_scores)
+
+        #   3) Evaluate the word with the highest score
+        if best_guess == answer:
+            print("\N{Large Green Square}"*5 + "   " + best_guess)
+            break
+        for i, (char, char_ans) in enumerate(zip(best_guess, answer)):
+            if char == char_ans:
+                # Green, remove all that do not have a green char in this slot
+                words = [word for word in words if word[i] == char]
+                print("\N{Large Green Square}", end='')
+            elif char in answer:
+                # Yellow, remove all words that do not have this letter and remove all words where this letter is in this slot
+                words = [word for word in words if char in word and word[i] != char]
+                print("\N{Large Yellow Square}", end='')
+                pass
+            else:
+                # Black, remove all words that contain this letter
+                words = [word for word in words if char not in word]
+                print("\N{Black Large Square}", end='')
+                pass
+        print("   " + best_guess)
