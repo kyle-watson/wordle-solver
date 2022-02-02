@@ -1,5 +1,9 @@
-answer = "sills"
-
+# Read, trim, and combine files
+allowed = (open("allowed.txt","r").readlines())
+allowed = [w.strip() for w in allowed]
+answers = (open("answers.txt","r").readlines())
+answers = [w.strip() for w in answers]
+words = list(set(allowed + answers))
 
 def score_letters(words):
     letter_scores = {}
@@ -47,11 +51,6 @@ def find_worst_guess(words, letter_scores):
 if __name__ == "__main__":
 
 
-    # Read file
-    words = (open("allowed.txt","r").readlines())
-
-    # Trim '\n' off end of each word
-    words = [w.strip() for w in words]
 
     # Greedy approach:
     #   1) Make a dictonary of letters and the number of times they appear in the word list
@@ -68,29 +67,75 @@ if __name__ == "__main__":
         #   1) Make a dictonary of letters and the number of times they appear in the word list
         #       (do not count double letters within words when scoring letters)
         letter_scores = score_letters(words)
-
         #   2) Score each word by summing each letter's score in dictionary
         #       (also do not count double letters within words towards a words score)
         best_guess = find_best_guess(words, letter_scores)
 
-        #   3) Evaluate the word with the highest score
-        if best_guess == answer:
+        #   Get feedback from user:
+        feedback = ""
+        while True:
+            print(f"Guess: {best_guess}")
+            print("Please enter the result ex:bggyy black, green, green, yellow, yellow")
+            safe_to_break = True
+            feedback = str(input())
+            if len(feedback) != 5:
+                print("Result is not the proper length, must be 5 characters")
+                safe_to_break = False
+                continue
+            for char in feedback:
+                if char != 'g' and char != 'y' and char != 'b':
+                    print(f"Result has illegal character: {char}, result must only contain either g, y or b")
+                    safe_to_break = False
+                    continue
+            if safe_to_break:
+                break
+
+        # Evaluate feedback
+        if feedback == 'ggggg':
             print("\N{Large Green Square}"*5 + "   " + best_guess)
             break
-        for i, (char, char_ans) in enumerate(zip(best_guess, answer)):
-            if char == char_ans:
-                # Green, remove all that do not have a green char in this slot
-                words = [word for word in words if word[i] == char]
-                print("\N{Large Green Square}", end='')
-            elif char in answer:
-                # Yellow, remove all words that do not have this letter and remove all words where this letter is in this slot
-                words = [word for word in words if char in word and word[i] != char]
-                print("\N{Large Yellow Square}", end='')
-                pass
-            else:
-                # Black, remove all words that contain this letter
-                words = [word for word in words if char not in word]
-                print("\N{Black Large Square}", end='')
-                pass
-            
+        for i, color in enumerate(feedback):
+                if color == 'g':
+                    # Green, remove all that do not have a green char in this slot
+                    words = [word for word in words if word[i] == best_guess[i]]
+                    print("\N{Large Green Square}", end='')
+                elif color == 'y':
+                    # Yellow, remove all words that do not have this letter and remove all words where this letter is in this slot
+                    words = [word for word in words if best_guess[i] in word and word[i] != best_guess[i]]
+                    print("\N{Large Yellow Square}", end='')
+                elif color == 'b':
+                    # Black, remove all words that contain this letter
+                    print(f"Removing all words containing {best_guess[i]}")
+                    words = [word for word in words if best_guess[i] not in word]
+                    print("\N{Black Large Square}", end='')
+                else:
+                    print(f"Fatal illegal char {color}")
+                    exit()
+                print(f"{i}", end='')
+                
+
+
+
+        
+
+        # #   3) Evaluate the word with the highest score
+        # if best_guess == answer:
+        #     print("\N{Large Green Square}"*5 + "   " + best_guess)
+        #     break
+        # for i, (char, char_ans) in enumerate(zip(best_guess, answer)):
+        #     if char == char_ans:
+        #         # Green, remove all that do not have a green char in this slot
+        #         words = [word for word in words if word[i] == char]
+        #         print("\N{Large Green Square}", end='')
+        #     elif char in answer:
+        #         # Yellow, remove all words that do not have this letter and remove all words where this letter is in this slot
+        #         words = [word for word in words if char in word and word[i] != char]
+        #         print("\N{Large Yellow Square}", end='')
+        #         pass
+        #     else:
+        #         # Black, remove all words that contain this letter
+        #         words = [word for word in words if char not in word]
+        #         print("\N{Black Large Square}", end='')
+        #         pass
+
         print("   " + best_guess)
