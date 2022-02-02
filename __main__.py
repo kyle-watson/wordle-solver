@@ -41,4 +41,18 @@ if __name__ == "__main__":
                 # If the character isn't in the dictionary, update dictionary
                 letter_scores.update({char: 1})
 
-    print(letter_scores)
+    print(f"Letter Scores: {letter_scores}")
+
+    #   2) Score each word by summing each letter's score in dictionary
+    #       (also do not count double letters within words towards a words score)
+    best_guess = words[0]
+    best_score = -1
+    for word in words:
+        score = 0
+        for char in set(word):
+            score += letter_scores[char]
+        if score > best_score:
+            best_guess = word
+            best_score = score
+    
+    print(f"Best Guess: {best_guess}")
