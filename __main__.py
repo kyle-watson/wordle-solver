@@ -1,4 +1,4 @@
-answer = "huzzy"
+answer = "sills"
 
 
 def score_letters(words):
@@ -46,6 +46,7 @@ def find_worst_guess(words, letter_scores):
 
 if __name__ == "__main__":
 
+
     # Read file
     words = (open("allowed.txt","r").readlines())
 
@@ -58,12 +59,12 @@ if __name__ == "__main__":
     #   2) Score each word by summing each letter's score in dictionary
     #       (also do not count double letters within words towards a words score)
     #   3) Evaluate the word with the highest score
-    #   4) Remove all words with black letters
-    #   5) Remove all words that do not have yellow letters
-    #   6) Remove all words with yellow letters in guessed slot
-    #   Repeat
+    #       Remove all words with black letters
+    #       Remove all words that do not have yellow letters
+    #       Remove all words with yellow letters in guessed slot
+    #   Repeat until solved
 
-    for _ in range(10):
+    for _ in range(20):
         #   1) Make a dictonary of letters and the number of times they appear in the word list
         #       (do not count double letters within words when scoring letters)
         letter_scores = score_letters(words)
@@ -91,4 +92,5 @@ if __name__ == "__main__":
                 words = [word for word in words if char not in word]
                 print("\N{Black Large Square}", end='')
                 pass
+            
         print("   " + best_guess)
