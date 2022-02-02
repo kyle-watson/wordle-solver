@@ -58,9 +58,10 @@ if __name__ == "__main__":
     #   2) Score each word by summing each letter's score in dictionary
     #       (also do not count double letters within words towards a words score)
     #   3) Evaluate the word with the highest score
-    #       Remove all words with black letters
+    #       Remove all words that do not have a green letter in the appropriate slot
     #       Remove all words that do not have yellow letters
     #       Remove all words with yellow letters in guessed slot
+    #       Remove all words with black letters
     #   Repeat until solved
 
     for _ in range(20):
