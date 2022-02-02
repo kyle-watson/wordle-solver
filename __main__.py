@@ -25,14 +25,20 @@ if __name__ == "__main__":
     # Future improvements
     #   Change scoring system based on what has already been guessed?
     
+
+    
+    
+    #   1) Make a dictonary of letters and the number of times they appear in the word list
+    #       (do not count double letters within words when scoring letters)
     letter_scores = {}
 
     for word in words:
-        # Set gives unique letters
+        # Foreach unique character...
         for char in set(word):
             try:
                 letter_scores[char] += 1
             except KeyError:
+                # If the character isn't in the dictionary, update dictionary
                 letter_scores.update({char: 1})
-                
+
     print(letter_scores)
